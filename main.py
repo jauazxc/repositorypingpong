@@ -1,7 +1,7 @@
 from pygame import *
 from random import randint
 
-class GameSprite(sprite.Sprite): #Основной класс спрайта
+class GameSprite(sprite.Sprite):
     def __init__(self, player_image, player_x, player_y, player_speed, size_x, size_y):
         super().__init__()
         self.image = transform.scale(image.load(player_image), (size_x, size_y))
@@ -9,7 +9,6 @@ class GameSprite(sprite.Sprite): #Основной класс спрайта
         self.rect = self.image.get_rect()
         self.rect.x = player_x
         self.rect.y = player_y
- 
     def reset(self):
         window.blit(self.image, (self.rect.x, self.rect.y)) 
 
@@ -31,31 +30,44 @@ class Player2(GameSprite):
 
 a = randint(1, 2)
 
+speed_x = 3
+speed_y = 3
+
 class Ball(GameSprite):
     def update(self):
-        if a == 1:
-            self.rect.x -= self.speed
-            self.rect.y -= self.speed
-        if a == 2:
-            self.rect.x += self.speed
-            self.rect.y += self.speed
-        if self.rect.x <= 30:
-            self.rect.x += self.speed
-        if self.rect.x >= 30:
-            self.rect.x -= self.speed
-        if self.rect.y <= 15:
-            self.rect.y += self.speed
-        if self.rect.y >= 15:
-            self.rect.y -= self.speed
-    
-    
-window = display.set_mode((500, 700))
-display.set_caption('qeqoqeq')
-background = transform.scale(image.load('background.jpg'), (500, 700))
+        global speed_x, speed_y
+        self.rect.x += speed_x
+        self.rect.y += speed_y
+        if self.rect.y >= 480 or self.rect.y <= 20:
+            speed_y *= -1
+        if self.rect.x <= 0:
+            window.blit(lose1, (200, 200))
+            window.blit(win2, (200, 350))
+        if self.rect.x >= 700:
+            window.blit(lose2, (200, 200))
+            window.blit(win1, (200, 350))
 
-player = Player('square.png', 15, 218, 15, 15, 65)
-player2 = Player2('square.png', 620, 217, 15, 15, 65)
-ball = GameSprite('treasure.png', 318, 218, 20, 40, 40)
+    
+def game_over():
+    global game
+    game = False
+
+window = display.set_mode((700, 500))
+display.set_caption('qeqoqeq')
+background = transform.scale(image.load('map.png'), (700, 500))
+
+player = Player('doom.png', 15, 218, 15, 50, 100)
+player2 = Player2('lion.png', 635, 217, 15, 50, 100)
+ball = Ball('ball.png', 318, 218, 30, 40, 40)
+
+font.init()
+font1 = font.Font(None, 35)
+win1 = font1.render('Player 1 win!', True, (255, 255, 255))
+lose1 = font1.render('Player 1 lose!', True, (180, 0, 0))
+
+font2 = font.Font(None, 35)
+win2 = font2.render('Player 2 win!', True, (255, 255, 255))
+lose2 = font2.render('Player 2 lose!', True, (180, 0, 0))
 
 game = True
 finish = False
@@ -65,11 +77,17 @@ while game:
     for e in event.get():
         if e.type == QUIT:
             game = False
-    if finish = false:
-        player.update()
+    if finish == False:
+        window.blit(background, (0,0)) 
+        player.update_l()
         player.reset()
-        player2.update()
+        player2.update_r()
         player2.reset()
         ball.update()
         ball.reset()
+        if sprite.collide_rect(ball, player) or sprite.collide_rect(ball, player2):
+            speed_x *= -1
+
+    display.update()
+    clock.tick(60)
     
