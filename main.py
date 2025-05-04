@@ -23,20 +23,20 @@ class Player(GameSprite):
 class Player2(GameSprite):
     def update_r(self):
         keys_pressed = key.get_pressed()
-        if keys_pressed[K_UP] and self.rect.y >= 15:
+        if keys_pressed[K_o] and self.rect.y >= 15:
             self.rect.y -= self.speed
-        if keys_pressed[K_DOWN] and self.rect.y <= 485:
+        if keys_pressed[K_l] and self.rect.y <= 485:
             self.rect.y += self.speed
 
 a = randint(1, 2)
 
 mixer.init()
-mixer.music.load('dotamusic.mp3')
+mixer.music.load('dotamusic.ogg')
 mixer.music.play
 
 
-speed_x = 5
-speed_y = 5
+speed_x = 7
+speed_y = 7
 
 class Ball(GameSprite):
     def update(self):
@@ -58,10 +58,10 @@ score1 = 0
 score2 = 0
     
 def game_over():
-    if score1 >= 11 and score1 - score2 == 2:
+    if score1 >= 11 and score1 - score2 >= 2:
         window.blit(lose1, (200, 200))
         window.blit(win2, (200, 350))
-    if score2 >= 11 and score2 - score1 == 2:
+    if score2 >= 11 and score2 - score1 >= 2:
         window.blit(lose2, (200, 200))
         window.blit(win1, (200, 350))
 
@@ -79,8 +79,8 @@ win1 = font1.render('Player 1 win!', True, (255, 255, 255))
 lose1 = font1.render('Player 1 lose!', True, (180, 0, 0))
 win2 = font1.render('Player 2 win!', True, (255, 255, 255))
 lose2 = font1.render('Player 2 lose!', True, (180, 0, 0))
-
-
+n1 = font1.render('UP - W, DOWN - S', True, (255, 255, 255))
+n2 = font1.render('UP - O, DOWN - L', True, (255, 255, 255))
 game = True
 finish = False
 clock = time.Clock()
@@ -94,7 +94,9 @@ while game:
         score_1 = font1.render('Player 1 score:'+str(score1), 1, (255, 255, 255))
         score_2 = font1.render('Player 2 score:'+str(score2), 1, (255, 255, 255))
         window.blit(score_1, (15, 15))
-        window.blit(score_2,(500, 15))
+        window.blit(score_2,(480, 15))
+        window.blit(n1,(15, 40))
+        window.blit(n2,(480, 40))
         player.update_l()
         player.reset()
         player2.update_r()
