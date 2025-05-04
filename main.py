@@ -94,7 +94,7 @@ while game:
         score_1 = font1.render('Player 1 score:'+str(score1), 1, (255, 255, 255))
         score_2 = font1.render('Player 2 score:'+str(score2), 1, (255, 255, 255))
         window.blit(score_1, (15, 15))
-        window.blit(score_2,(515, 15))
+        window.blit(score_2,(500, 15))
         player.update_l()
         player.reset()
         player2.update_r()
