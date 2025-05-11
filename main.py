@@ -50,7 +50,7 @@ class Ball(GameSprite):
             self.rect.y = 218
             self.rect.x = 318
             sleep(1)
-        if self.rect.x >= 700:
+        if self.rect.x >= 660:
             score1 +=1
             self.rect.y = 218
             self.rect.x = 318 
@@ -59,17 +59,23 @@ class Ball(GameSprite):
 score1 = 0
 score2 = 0
 
+def draw_pause():
+    zxcpausss = font2.render('GAME PAUSED', True, (255, 0, 0))
+    window.blit(zxcpausss,(100, 250))
+
+pause_time = 0
+
 def game_over():
     if score1 >= 11 and score1 - score2 >= 2:
-        window.blit(lose1, (200, 200))
-        window.blit(win2, (200, 350))
-    if score2 >= 11 and score2 - score1 >= 2:
         window.blit(lose2, (200, 200))
         window.blit(win1, (200, 350))
+    if score2 >= 11 and score2 - score1 >= 2:
+        window.blit(lose1, (200, 200))
+        window.blit(win2, (200, 350))
 
 window = display.set_mode((700, 500))
 display.set_caption('qeqoqeq')
-background = transform.scale(image.load('map.png'), (700, 500))
+background = transform.scale(image.load('oboi CR.jpg'), (700, 500))
 
 cooldown = 0
 
@@ -79,34 +85,45 @@ ball = Ball('ball.png', 318, 218, 200, 40, 40)
 
 font.init()
 font1 = font.Font(None, 35)
+font2 = font.Font(None, 96)
 win1 = font1.render('Player 1 win!', True, (255, 255, 255))
 lose1 = font1.render('Player 1 lose!', True, (180, 0, 0))
 win2 = font1.render('Player 2 win!', True, (255, 255, 255))
 lose2 = font1.render('Player 2 lose!', True, (180, 0, 0))
-n1 = font1.render('UP - W, DOWN - S', True, (255, 255, 255))
+n1 = font1.render('UP - W, DOWN - S', True, (255, 0, 255))
 n2 = font1.render('UP - O, DOWN - L', True, (255, 255, 255))
+zxcpause = font1.render('PAUSE - ESC (5s)', True, (255, 255, 255))
+
 game = True
 finish = False
+pause = False
 clock = time.Clock()
 FPS = 60
 while game:
     for e in event.get():
         if e.type == QUIT:
             game = False
-    if finish == False:
-        window.blit(background, (0,0)) 
-        score_1 = font1.render('Player 1 score:'+str(score1), 1, (255, 255, 255))
-        score_2 = font1.render('Player 2 score:'+str(score2), 1, (255, 255, 255))
-        window.blit(score_1, (15, 15))
-        window.blit(score_2,(480, 15))
-        window.blit(n1,(15, 40))
-        window.blit(n2,(480, 40))
+
+    window.blit(background, (0,0)) 
+    score_1 = font1.render('Player 1 score:'+str(score1), 1, (255, 0, 255))
+    score_2 = font1.render('Player 2 score:'+str(score2), 1, (255, 255, 255))
+    window.blit(score_1, (15, 15))
+    window.blit(score_2,(480, 15))
+    window.blit(n1,(15, 40))
+    window.blit(n2,(480, 40))
+    window.blit(zxcpause,(250, 20))
+    player.reset()
+    player2.reset()
+    ball.reset()
+
+    keys_pressed = key.get_pressed()
+    if keys_pressed[K_ESCAPE]:
+        pause = True
+        
+    if finish == False and pause == False:
         player.update_l()
-        player.reset()
         player2.update_r()
-        player2.reset()
         ball.update()
-        ball.reset()
         if sprite.collide_rect(ball, player) and cooldown > 9:
             speed_x *= -1
             cooldown = 0
@@ -115,6 +132,11 @@ while game:
             cooldown = 0
         game_over()
         cooldown += 1
-
+    if pause == True and pause_time > 300:
+        pause = False
+        pause_time = 0
+    if pause == True and pause <= 300:
+        draw_pause()
+        pause_time += 1
     display.update()
     clock.tick(60)
