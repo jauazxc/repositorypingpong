@@ -1,5 +1,6 @@
 from pygame import *
 from random import randint
+from time import sleep
 
 class GameSprite(sprite.Sprite):
     def __init__(self, player_image, player_x, player_y, player_speed, size_x, size_y):
@@ -34,7 +35,6 @@ mixer.init()
 mixer.music.load('dotamusic.ogg')
 mixer.music.play
 
-
 speed_x = 7
 speed_y = 7
 
@@ -48,17 +48,16 @@ class Ball(GameSprite):
         if self.rect.x <= 0:
             score2 += 1
             self.rect.y = 218
-            self.rect.x = 318  
+            self.rect.x = 318
+            sleep(1)
         if self.rect.x >= 700:
             score1 +=1
             self.rect.y = 218
             self.rect.x = 318 
+            sleep(1)
 
 score1 = 0
 score2 = 0
-    
-  
-
 
 def game_over():
     if score1 >= 11 and score1 - score2 >= 2:
