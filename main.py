@@ -57,6 +57,9 @@ class Ball(GameSprite):
 score1 = 0
 score2 = 0
     
+  
+
+
 def game_over():
     if score1 >= 11 and score1 - score2 >= 2:
         window.blit(lose1, (200, 200))
@@ -68,6 +71,8 @@ def game_over():
 window = display.set_mode((700, 500))
 display.set_caption('qeqoqeq')
 background = transform.scale(image.load('map.png'), (700, 500))
+
+cooldown = 0
 
 player = Player('doom.png', 15, 218, 15, 50, 100)
 player2 = Player2('lion.png', 635, 217, 15, 50, 100)
@@ -103,11 +108,14 @@ while game:
         player2.reset()
         ball.update()
         ball.reset()
-        if sprite.collide_rect(ball, player):
+        if sprite.collide_rect(ball, player) and cooldown > 9:
             speed_x *= -1
-        if sprite.collide_rect(ball, player2):
+            cooldown = 0
+        if sprite.collide_rect(ball, player2) and cooldown > 9:
             speed_x *= -1
+            cooldown = 0
         game_over()
+        cooldown += 1
 
     display.update()
     clock.tick(60)
